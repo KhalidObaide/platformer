@@ -16,7 +16,7 @@ Player::Player(
 
   is_jumping = false;
   jump_time = 10;
-  jump_counter = jump_time;
+  jump_counter = 0;
   jump_delay = 300;
   last_jump = current_epoch();
 
@@ -26,7 +26,7 @@ Player::Player(
 
 }
 
-void Player::update(std::unordered_map<std::string, bool>* events) {
+void Player::update(std::unordered_map<std::string, int>* events) {
   int current = current_epoch();
 
   bool on_platform = false;

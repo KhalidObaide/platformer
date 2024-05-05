@@ -22,12 +22,15 @@ int main() {
     SDL_RENDERER_ACCELERATED
   );
 
-  std::unordered_map<std::string, bool> events_map;
-  events_map["HOLD_KEY_RIGHT"] = false;
-  events_map["HOLD_KEY_LEFT"] = false;
-  events_map["HOLD_KEY_UP"] = false;
+  std::unordered_map<std::string, int> events_map;
+  events_map["HOLD_KEY_RIGHT"] = 0;
+  events_map["HOLD_KEY_LEFT"] = 0;
+  events_map["HOLD_KEY_UP"] = 0;
+  events_map["HOLD_MOUSE_BUTTON"] = 0;
+  events_map["POS_MOUSE_X"] = 0;
+  events_map["POS_MOUSE_Y"] = 0;
 
-  Platform ground = Platform({0, SIZE.y-25}, {SIZE.x, 25});
+  Platform ground = Platform({0, SIZE.y-25}, {SIZE.x, 25}, false);
   Platform p1 = Platform({250, SIZE.y-75}, {100, 25});
   Platform p2 = Platform({400, SIZE.y-175}, {100, 25}); 
   Platform p3 = Platform({550, SIZE.y-75}, {100, 25}); 
@@ -42,24 +45,32 @@ int main() {
     // events
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
-      if (event.type == SDL_QUIT) {
-        running = false;
-      } else if (event.type == SDL_KEYDOWN) {
-        if (event.key.keysym.sym == SDLK_RIGHT) {
-          events_map["HOLD_KEY_RIGHT"] = true;
-        } else if (event.key.keysym.sym == SDLK_LEFT) {
-          events_map["HOLD_KEY_LEFT"] = true;
-        } else if (event.key.keysym.sym == SDLK_UP) {
-          events_map["HOLD_KEY_UP"] = true;
-        }
-      } else if (event.type == SDL_KEYUP) {
-        if (event.key.keysym.sym == SDLK_RIGHT) {
-          events_map["HOLD_KEY_RIGHT"] = false;
-        } else if (event.key.keysym.sym == SDLK_LEFT) {
-          events_map["HOLD_KEY_LEFT"] = false;
-        } else if (event.key.keysym.sym == SDLK_UP) {
-          events_map["HOLD_KEY_UP"] = false;
-        }
+      switch (event.type) {
+        case SDL_QUIT:
+          running = false;
+          break;
+        case SDL_KEYDOWN:
+          if (event.key.keysym.sym == SDLK_RIGHT) events_map["HOLD_KEY_RIGHT"] = 1;
+          if (event.key.keysym.sym == SDLK_LEFT) events_map["HOLD_KEY_LEFT"] = 1;
+          if (event.key.keysym.sym == SDLK_UP) events_map["HOLD_KEY_UP"] = 1;
+          break;
+        case SDL_KEYUP:
+          if (event.key.keysym.sym == SDLK_RIGHT) events_map["HOLD_KEY_RIGHT"] = 0;
+          if (event.key.keysym.sym == SDLK_LEFT) events_map["HOLD_KEY_LEFT"] = 0;
+          if (event.key.keysym.sym == SDLK_UP) events_map["HOLD_KEY_UP"] = 0;
+          break;
+        case SDL_MOUSEMOTION:
+          events_map["POS_MOUSE_X"] = event.motion.x;
+          events_map["POS_MOUSE_Y"] = event.motion.y;
+          break;
+        case SDL_MOUSEBUTTONDOWN:
+          events_map["HOLD_MOUSE_BUTTON"] = 1;
+          break;
+        case SDL_MOUSEBUTTONUP:
+          events_map["HOLD_MOUSE_BUTTON"] = 0;
+          break;
+        default:
+          break;
       }
     }
 

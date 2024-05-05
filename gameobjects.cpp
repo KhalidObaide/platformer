@@ -10,7 +10,7 @@ GameObject::GameObject(
   fill = new_fill;
 }
 
-void GameObject::update(std::unordered_map<std::string, bool>*) {};
+void GameObject::update(std::unordered_map<std::string, int>*) {};
 
 bool GameObject::is_colliding(GameObject* target) {
     // Check if the current object is colliding with the target object

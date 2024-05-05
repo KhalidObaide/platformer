@@ -23,7 +23,7 @@ public:
   GameObject(Coordinate new_position, Coordinate new_size, RGBA new_fill);
   bool is_colliding(GameObject* target);
   virtual ~GameObject();
-  virtual void update(std::unordered_map<std::string, bool>* events);
+  virtual void update(std::unordered_map<std::string, int>* events);
 };
 
 class Player : public GameObject {
@@ -42,10 +42,17 @@ private:
 public:
   Coordinate velocity;
   Player(Coordinate new_position, std::vector<GameObject*> new_platforms);
-  void update(std::unordered_map<std::string, bool>* events);
+  void update(std::unordered_map<std::string, int>* events);
 };
 
 class Platform : public GameObject {
+private:
+  bool is_draggable;
 public:
-  Platform(Coordinate new_position, Coordinate new_size);
+  Platform(
+    Coordinate new_position, 
+    Coordinate new_size, 
+    bool new_is_draggable = true
+  );
+  void update(std::unordered_map<std::string, int>* events);
 };
